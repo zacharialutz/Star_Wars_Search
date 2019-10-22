@@ -1,9 +1,13 @@
 import React from 'react';
-import './Result.css'
+import './Entry.css'
 
 // Individual entry in the list of results
-function Result() {
-
+function Entry(props) {
+	return(
+		<li>
+			<h2>{props.name}</h2>
+		</li>
+	);
 }
 
-export default Result
+export default Entry

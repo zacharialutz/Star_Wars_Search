@@ -1,9 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
 import Form from './component/Form';
 import ResList from './component/ResList';
 import './App.css';
 import Header from './component/Header';
+import Loading from './component/Loading';
 
 export default class App extends React.Component {
   state = {
@@ -39,9 +39,10 @@ export default class App extends React.Component {
     const filter = this.state.filter;
 
     const req = `https://swapi.co/api/${filter}/?search=${term}`;
-    console.log(req);
+    // console.log(req);
     fetch(req).then(res => res.json()).then(data => this.setState({
-        resList: data.results
+        resList: data.results,
+        loading: false
     }));
   }
 
@@ -58,11 +59,13 @@ export default class App extends React.Component {
             searchChanged={this.searchChanged}
             filterChanged={this.filterChanged}
           />
+          {this.state.loading && <Loading />}
+          {/* Conditional render for error readout */}
           <ResList
             list={this.state.resList}
+            filter={this.state.filter}
             loading={this.state.loading}  
           />
-          <Route path='/:entry' />
         </main>
       </div>
     );
