@@ -3,7 +3,7 @@ import React from 'react';
 function Header() {
 	return (
 		<header className="App-header">
-          <h1>Star Wars Search</h1>
+          <h1>STAR WARS SEARCH</h1>
         </header>
 	)
 }

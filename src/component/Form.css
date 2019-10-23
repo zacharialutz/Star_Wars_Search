@@ -1,0 +1,15 @@
+form {
+	padding: 12px;
+	background-color: rgb(70, 70, 70);
+	color: rgb(233, 233, 233);
+}
+
+input, select {
+	margin: 0 25px 0 5px;
+	font-size: 17px;
+}
+
+.btn-sub {
+	width: 90px;
+	height: 35px;
+}

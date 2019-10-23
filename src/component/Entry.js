@@ -46,7 +46,6 @@ export default class Entry extends React.Component {
 
 	// Generates a list element with data content based on search type
 	render() {
-		console.log(this.state);
 		const me = this.state.myself;
 		return(
 			<li className='listing'>

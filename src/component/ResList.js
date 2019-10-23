@@ -16,7 +16,7 @@ function ResList(props) {
 	});
 	
 	return (
-		<ul>
+		<ul className='mainList'>
 			{resList}
 		</ul>
 	);

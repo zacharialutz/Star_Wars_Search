@@ -1,4 +1,6 @@
-import React from 'react';
+import React from 'react'
+
+import './Form.css'
 
 function Form(props) {
 	return (
@@ -20,7 +22,7 @@ function Form(props) {
 				<option value='species'>Species</option>
 				<option value='films'>Films</option>
 			</select>
-			<input type='submit' value='Submit' />
+			<input className='btn-sub' type='submit' value='Submit' />
 		</form>
 	)
 }
