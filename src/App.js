@@ -1,9 +1,10 @@
-import React from 'react';
-import Form from './component/Form';
-import ResList from './component/ResList';
+import React from 'react'
+import Form from './component/Form'
+import ResList from './component/ResList'
 
-import Header from './component/Header';
-import Loading from './component/Loading';
+import Header from './component/Header'
+import Footer from './component/Footer'
+import Loading from './component/Loading'
 
 import './App.css';
 
@@ -70,6 +71,7 @@ export default class App extends React.Component {
             loading={this.state.loading}  
           />
         </main>
+        <Footer />
       </div>
     );
   }
