@@ -5,8 +5,8 @@ li {
 	margin: 0 0 25px;
 }
 
-a {
-	color: gold;
+span {
+	text-decoration: underline;
 }
 
 .stats {

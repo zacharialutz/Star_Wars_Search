@@ -9,8 +9,6 @@ export default class Entry extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			myself: this.props.thisOne,
-
 			speciesLink: this.props.thisOne.species,
 			speciesName: null,
 			homeworldLink: this.props.homeworld,
@@ -38,18 +36,25 @@ export default class Entry extends React.Component {
 					});
 				break;
 			default:
-			this.setState({
-				error: 'Search type unavailable'
-			})
+				this.setState({
+					loading: false, // deactivate loading indicator
+					error: 'Search type unavailable'
+				})
 		}
 	}
 
 	// Generates a list element with data content based on search type
 	render() {
-		const me = this.state.myself;
+		const me = this.props.thisOne;
 		return(
 			<li className='listing'>
-				<h2>{this.state.myself.name}</h2>
+				{this.props.type !== 'films' &&
+					<h2>{me.name}</h2>
+				}
+				{this.props.type === 'films' &&
+					<h2>{me.title}</h2>
+				}
+
 				{this.state.loading && <Loading loadItem='DATA' />}
 				{!this.state.loading &&
 					<>
@@ -57,14 +62,19 @@ export default class Entry extends React.Component {
 							<>
 								<ul className='stats'>
 									<li>
-										<a href={this.state.speciesLink}>{this.state.speciesName}</a> {me.gender}, born {me.birth_year}
+										<span
+											tabIndex='0'
+											onClick={e => {this.props.crossref(
+												e,
+												this.state.speciesLink,
+												'species'
+											)}}
+											>{this.state.speciesName}
+										</span> {me.gender}, born {me.birth_year}
 									</li>
 
 								</ul>
 							</>
-						}
-						{this.props.type === 'films' &&
-							<h2>{me.title}</h2>
 						}
 					</>
 				}

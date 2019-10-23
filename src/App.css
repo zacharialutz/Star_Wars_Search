@@ -38,3 +38,7 @@ body {
 .loader, footer {
   color: rgb(226, 226, 226);
 }
+
+footer a {
+  color: rgb(226, 226, 226);
+}

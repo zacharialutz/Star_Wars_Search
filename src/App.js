@@ -51,7 +51,26 @@ export default class App extends React.Component {
     }));
   }
 
+  // Performs specific entry lookup for links within data
+  handleCross = (event, query, type) => {
+    event.preventDefault();
+    this.setState({
+      resList: [], // clear results list
+      loading: true, // activate loading indicator
+      displayType: type
+    });
+
+    console.log(query);
+
+    fetch(query).then(res => res.json()).then(data => this.setState({
+      resList: [data],
+      displayType: this.state.filter, // lock in search type for subsequent parsing
+      loading: false // deactivate loading indicator
+    }));
+  }
+
   render() {
+    console.log(this.state);
     return (
       <div className="App">
           <Header />
@@ -68,7 +87,8 @@ export default class App extends React.Component {
           <ResList
             list={this.state.resList}
             displayType={this.state.displayType}
-            loading={this.state.loading}  
+            loading={this.state.loading}
+            crossref={this.handleCross}
           />
         </main>
         <Footer />

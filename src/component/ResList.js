@@ -11,6 +11,7 @@ function ResList(props) {
 				key={item.url}
 				type={props.displayType}
 				thisOne={item}
+				crossref={props.crossref}
 			/>
 		);
 	});
