@@ -11,6 +11,7 @@ export default class App extends React.Component {
 
     query: '',
     filter: 'people',
+    displayType: 'people',
 
     loading: false,
     error: null
@@ -42,12 +43,12 @@ export default class App extends React.Component {
     // console.log(req);
     fetch(req).then(res => res.json()).then(data => this.setState({
         resList: data.results,
+        displayType: this.state.filter,
         loading: false
     }));
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="App">
           <Header />
@@ -60,10 +61,10 @@ export default class App extends React.Component {
             filterChanged={this.filterChanged}
           />
           {this.state.loading && <Loading />}
-          {/* Conditional render for error readout */}
+          {/* TODO: Conditional render for error readout */}
           <ResList
             list={this.state.resList}
-            filter={this.state.filter}
+            displayType={this.state.displayType}
             loading={this.state.loading}  
           />
         </main>
