@@ -62,7 +62,7 @@ export default class App extends React.Component {
             searchChanged={this.searchChanged}
             filterChanged={this.filterChanged}
           />
-          {this.state.loading && <Loading />}
+          {this.state.loading && <Loading loadItem='RESULTS' />}
           {/* TODO: Conditional render for error readout */}
           <ResList
             list={this.state.resList}

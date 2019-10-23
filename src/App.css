@@ -29,3 +29,7 @@ body {
   background-image: url('background.jpg');
   background-size: cover;
 }
+
+.loader {
+  color: rgb(226, 226, 226);
+}

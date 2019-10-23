@@ -49,20 +49,24 @@ export default class Entry extends React.Component {
 		const me = this.state.myself;
 		return(
 			<li className='listing'>
-				{this.state.loading && <Loading />}
-				{this.props.type === 'people' &&
+				<h2>{this.state.myself.name}</h2>
+				{this.state.loading && <Loading loadItem='DATA' />}
+				{!this.state.loading &&
 					<>
-						<h2>{this.state.myself.name}</h2>
-						<ul className='stats'>
-							<li>
-								<a href={this.state.speciesLink}>{this.state.speciesName}</a> {me.gender}, born {me.birth_year}
-							</li>
+						{this.props.type === 'people' &&
+							<>
+								<ul className='stats'>
+									<li>
+										<a href={this.state.speciesLink}>{this.state.speciesName}</a> {me.gender}, born {me.birth_year}
+									</li>
 
-						</ul>
+								</ul>
+							</>
+						}
+						{this.props.type === 'films' &&
+							<h2>{me.title}</h2>
+						}
 					</>
-				}
-				{this.props.type === 'films' &&
-					<h2>{me.title}</h2>
 				}
 			</li>
 		);
