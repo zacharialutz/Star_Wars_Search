@@ -36,20 +36,18 @@ export default class App extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({
+      resList: [], // clear results list
       loading: true // activate loading indicator
     });
     const term = this.state.query;
     const filter = this.state.filter;
     const req = `https://swapi.co/api/${filter}/?search=${term}`;
 
-    fetch(req)
-        .then(res => res.json())
-        .then(data => {
-          this.setState({
-            resList: data.results,
-            displayType: this.state.filter,
-            loading: false
-    })});
+    fetch(req).then(res => res.json()).then(data => this.setState({
+      resList: data.results,
+      displayType: this.state.filter, // lock in search type for subsequent parsing
+      loading: false // deactivate loading indicator
+    }));
   }
 
   render() {

@@ -1,6 +1,8 @@
 import React from 'react'
 import Entry from './Entry'
 
+import './ResList.css'
+
 // Maps and lists returns from the API search, each of which presents linked data
 function ResList(props) {
 	const resList = props.list.map(item => {

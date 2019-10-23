@@ -2,7 +2,7 @@ import React from 'react';
 
 function Loading(props) {
 	return (
-		<h3>Loading...</h3>
+		<h3>LOADING...</h3>
 	);
 }
 
