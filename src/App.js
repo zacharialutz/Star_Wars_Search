@@ -1,9 +1,11 @@
 import React from 'react';
 import Form from './component/Form';
 import ResList from './component/ResList';
-import './App.css';
+
 import Header from './component/Header';
 import Loading from './component/Loading';
+
+import './App.css';
 
 export default class App extends React.Component {
   state = {
@@ -29,7 +31,7 @@ export default class App extends React.Component {
 			filter
 		});
 	}
-
+  
   // Searches API with search term and filter type
   handleSubmit = (event) => {
     event.preventDefault();
@@ -38,14 +40,16 @@ export default class App extends React.Component {
     });
     const term = this.state.query;
     const filter = this.state.filter;
-
     const req = `https://swapi.co/api/${filter}/?search=${term}`;
-    // console.log(req);
-    fetch(req).then(res => res.json()).then(data => this.setState({
-        resList: data.results,
-        displayType: this.state.filter,
-        loading: false
-    }));
+
+    fetch(req)
+        .then(res => res.json())
+        .then(data => {
+          this.setState({
+            resList: data.results,
+            displayType: this.state.filter,
+            loading: false
+    })});
   }
 
   render() {
