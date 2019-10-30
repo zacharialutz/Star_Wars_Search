@@ -44,10 +44,14 @@ export default class App extends React.Component {
     const filter = this.state.filter;
     const req = `https://swapi.co/api/${filter}/?search=${term}`;
 
-    fetch(req).then(res => res.json()).then(data => this.setState({
-      resList: data.results,
-      displayType: this.state.filter, // lock in search type for subsequent parsing
-      loading: false // deactivate loading indicator
+    console.log(req);
+
+    fetch(req)
+      .then(res => res.json())
+      .then(data => this.setState({
+        resList: data.results,
+        displayType: this.state.filter, // lock in search type for subsequent parsing
+        loading: false // deactivate loading indicator
     }));
   }
 
@@ -56,17 +60,20 @@ export default class App extends React.Component {
     event.preventDefault();
     this.setState({
       resList: [], // clear results list
-      loading: true, // activate loading indicator
-      displayType: type
+      displayType: type,
+      loading: true // activate loading indicator
     });
 
     console.log(query);
 
-    fetch(query).then(res => res.json()).then(data => this.setState({
-      resList: [data],
-      displayType: this.state.filter, // lock in search type for subsequent parsing
-      loading: false // deactivate loading indicator
-    }));
+    fetch(query)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        this.setState({
+        resList: [data],
+        loading: false // deactivate loading indicator
+    })});
   }
 
   render() {

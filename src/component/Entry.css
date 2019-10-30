@@ -5,8 +5,11 @@ li {
 	margin: 0 0 25px;
 }
 
-span {
+.crossRef {
 	text-decoration: underline;
+}
+.crossRef:hover {
+	cursor: pointer;
 }
 
 .stats {
