@@ -19,25 +19,24 @@ export default class App extends React.Component {
     error: null
   }
 
-  // Updaters to wire form inputs
   searchChanged = query => {
-		this.setState({
-			query
-		});
+    this.setState({
+      query
+    });
   }
-  
+
   filterChanged = filter => {
-		this.setState({
-			filter
-		});
-	}
-  
+    this.setState({
+      filter
+    });
+  }
+
   // Searches API with search term and filter type
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     event.preventDefault();
     this.setState({
-      resList: [], // clear results list
-      loading: true // activate loading indicator
+      resList: [],
+      loading: true
     });
     const term = this.state.query;
     const filter = this.state.filter;
@@ -50,17 +49,17 @@ export default class App extends React.Component {
       .then(data => this.setState({
         resList: data.results,
         displayType: this.state.filter, // lock in search type for subsequent parsing
-        loading: false // deactivate loading indicator
-    }));
+        loading: false
+      }));
   }
 
   // Performs specific entry lookup for links within data
   handleCross = (event, query, type) => {
     event.preventDefault();
     this.setState({
-      resList: [], // clear results list
+      resList: [],
       displayType: type,
-      loading: true // activate loading indicator
+      loading: true
     });
 
     console.log(query);
@@ -70,16 +69,17 @@ export default class App extends React.Component {
       .then(data => {
         console.log(data);
         this.setState({
-        resList: [data],
-        loading: false // deactivate loading indicator
-    })});
+          resList: [data],
+          loading: false
+        })
+      });
   }
 
   render() {
     console.log(this.state);
     return (
-      <div className="App">
-          <Header />
+      <div className='App'>
+        <Header />
         <main>
           <Form
             handleSubmit={this.handleSubmit}

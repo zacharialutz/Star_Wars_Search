@@ -1,19 +1,22 @@
 import React from 'react'
-
 import './Form.css'
 
-function Form(props) {
+export default function Form(props) {
 	return (
-		<form onSubmit={e => {props.handleSubmit(e)}}>
+		<form onSubmit={e => props.handleSubmit(e)}>
 			<label htmlFor='search'>Search: </label>
-			<input type='text' id='search' required
+			<input
+				type='text'
+				id='search'
 				value={props.query}
-				onChange={e => {props.searchChanged(e.target.value)}}
+				onChange={e => props.searchChanged(e.target.value)}
+				required
 			/>
 			<label htmlFor='filter'>Filter: </label>
-			<select id='filter'
+			<select
+				id='filter'
 				value={props.filter}
-				onChange={e => {props.filterChanged(e.target.value)}}
+				onChange={e => props.filterChanged(e.target.value)}
 			>
 				<option value='people'>Characters</option>
 				<option value='starships'>Starships</option>
@@ -22,9 +25,11 @@ function Form(props) {
 				<option value='species'>Species</option>
 				<option value='films'>Films</option>
 			</select>
-			<input className='btn-sub' type='submit' value='Submit' />
+			<input
+				className='btn-sub'
+				type='submit'
+				value='Submit'
+			/>
 		</form>
 	)
 }
-
-export default Form;
