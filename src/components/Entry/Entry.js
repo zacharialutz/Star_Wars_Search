@@ -7,15 +7,15 @@ export default class Entry extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			speciesLink: this.props.thisOne.species,
-			speciesName: null,
-			homeworldLink: this.props.thisOne.homeworld,
-			homeworldName: null,
-
 			loading: false,
 			error: null
 		}
 	}
+
+	speciesLink = this.props.thisOne.species;
+	speciesName = null;
+	homeworldLink = this.props.thisOne.homeworld;
+	homeworldName = null;
 
 	componentDidMount() {
 		this.setState({
@@ -23,21 +23,21 @@ export default class Entry extends React.Component {
 		});
 
 		if (this.props.type === 'people') {
-			fetch(this.state.speciesLink)
+			fetch(this.speciesLink)
 				.then(res => res.json())
 				.then(data => {
+					this.speciesName = data.name;
 					this.setState({
-						speciesName: data.name,
 						loading: false
 					})
 				});
 		}
 		if (this.props.type === 'people' || 'species') {
-			fetch(this.state.homeworldLink)
+			fetch(this.homeworldLink)
 				.then(res => res.json())
 				.then(data => {
+					this.homeworldName = data.name;
 					this.setState({
-						homeworldName: data.name,
 						loading: false
 					})
 				});
@@ -56,9 +56,9 @@ export default class Entry extends React.Component {
 
 				{this.state.loading
 					? <Loading loadItem='DATA' />
-					: <>
+					: <ul className='stats'>
 						{this.props.type === 'people' &&
-							<ul className='stats'>
+							<>
 								<li>
 									<span
 										className='crossRef'
@@ -66,16 +66,16 @@ export default class Entry extends React.Component {
 										onClick={e => {
 											this.props.crossref(
 												e,
-												this.state.speciesLink,
+												this.speciesLink,
 												'species'
 											)
 										}}>
-										{this.state.speciesName}
+										{this.speciesName}
 									</span> born {me.birth_year}
 								</li>
 								<li>
 									gender: {me.gender}<br />
-									homeworld: {this.state.homeworldName === 'unknown'
+									homeworld: {this.homeworldName === 'unknown'
 										? <span>unknown</span>
 										: <span
 											className='crossRef'
@@ -83,11 +83,11 @@ export default class Entry extends React.Component {
 											onClick={e => {
 												this.props.crossref(
 													e,
-													this.state.homeworldLink,
+													this.homeworldLink,
 													'planets'
 												)
 											}}>
-											{this.state.homeworldName}
+											{this.homeworldName}
 										</span>
 									}
 								</li>
@@ -100,10 +100,10 @@ export default class Entry extends React.Component {
 									hair: {me.hair_color}<br />
 									eyes: {me.eye_color}
 								</li>
-							</ul>
+							</>
 						}
 						{this.props.type === 'species' &&
-							<ul className='stats'>
+							<>
 								<li>
 									{me.designation} {me.classification}
 								</li>
@@ -118,7 +118,7 @@ export default class Entry extends React.Component {
 								</li>
 								<li>
 									language: {me.language}<br />
-									homeworld: {this.state.homeworldName === 'unknown'
+									homeworld: {this.homeworldName === 'unknown'
 										? <span>unknown</span>
 										: <span
 											className='crossRef'
@@ -126,18 +126,18 @@ export default class Entry extends React.Component {
 											onClick={e => {
 												this.props.crossref(
 													e,
-													this.state.homeworldLink,
+													this.homeworldLink,
 													'planets'
 												)
 											}}>
-											{this.state.homeworldName}
+											{this.homeworldName}
 										</span>
 									}
 								</li>
-							</ul>
+							</>
 						}
 						{this.props.type === 'planets' &&
-							<ul className='stats'>
+							<>
 								<li>
 									population: {me.population}
 								</li>
@@ -152,12 +152,11 @@ export default class Entry extends React.Component {
 									terrain: {me.terrain}<br />
 									surface water: {me.surface_water}%
 								</li>
-							</ul>
+							</>
 						}
-					</>
+					</ul>
 				}
 			</li>
 		);
 	}
-
 }
