@@ -1,12 +1,11 @@
-import React from 'react'
-import Form from './component/Form'
-import ResList from './component/ResList'
-
-import Header from './component/Header'
-import Footer from './component/Footer'
-import Loading from './component/Loading'
-
+import React from 'react';
 import './App.css';
+
+import Footer from '../Footer/Footer';
+import Form from '../Form/Form';
+import Header from '../Header/Header';
+import Loading from '../Loading/Loading';
+import ResList from '../ResList/ResList';
 
 export default class App extends React.Component {
   state = {

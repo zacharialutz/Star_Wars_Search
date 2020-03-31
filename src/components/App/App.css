@@ -2,14 +2,8 @@
   box-sizing: border-box;
 }
 
-@font-face {
-  font-family: 'Distant-Galaxy';
-  src: url('sf_distant_galaxy_outline.ttf')
-}
-
 .App {
   text-align: center;
-  font-family: 'Share Tech', sans-serif;
   font-size: 18px;
 }
 
@@ -31,7 +25,7 @@
 
 body {
   background-color: #1e2127;
-  background-image: url('background.jpg');
+  background-image: url('../../background.jpg');
   background-size: cover;
 }
 
