@@ -13,7 +13,6 @@ export default class App extends React.Component {
 
     query: '',
     filter: 'people',
-    displayType: 'people',
 
     loading: false,
     error: null
@@ -24,14 +23,12 @@ export default class App extends React.Component {
       query
     });
   }
-
   filterChanged = filter => {
     this.setState({
       filter
     });
   }
 
-  // Searches API with search term and filter type
   handleSubmit = event => {
     event.preventDefault();
     this.setState({
@@ -48,17 +45,15 @@ export default class App extends React.Component {
       .then(res => res.json())
       .then(data => this.setState({
         resList: data.results,
-        displayType: this.state.filter, // lock in search type for subsequent parsing
         loading: false
       }));
   }
 
-  // Performs specific entry lookup for links within data
-  handleCross = (event, query, type) => {
+  handleCrosslink = (event, query, type) => {
     event.preventDefault();
     this.setState({
       resList: [],
-      displayType: type,
+      filter: type,
       loading: true
     });
 
@@ -92,9 +87,9 @@ export default class App extends React.Component {
           {/* TODO: Conditional render for error readout */}
           <ResList
             list={this.state.resList}
-            displayType={this.state.displayType}
+            type={this.state.filter}
             loading={this.state.loading}
-            crossref={this.handleCross}
+            crossref={this.handleCrosslink}
           />
         </main>
         <Footer />

@@ -8,7 +8,7 @@ export default function ResList(props) {
 		return (
 			<Entry
 				key={item.url}
-				type={props.displayType}
+				type={props.type}
 				thisOne={item}
 				crossref={props.crossref}
 			/>
