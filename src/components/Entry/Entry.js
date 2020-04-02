@@ -15,9 +15,9 @@ export default class Entry extends React.Component {
 	homeworldLink = this.props.thisOne.homeworld;
 	homeworldName = null;
 
-	componentDidMount() {
+	async componentDidMount() {
 		if (this.speciesLink) {
-			fetch(this.speciesLink)
+			await fetch(this.speciesLink)
 				.then(res => res.json())
 				.then(data => {
 					this.speciesName = data.name;
@@ -25,7 +25,7 @@ export default class Entry extends React.Component {
 		}
 
 		if (this.homeworldLink) {
-			fetch(this.homeworldLink)
+			await fetch(this.homeworldLink)
 				.then(res => res.json())
 				.then(data => {
 					this.homeworldName = data.name;
