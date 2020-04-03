@@ -35,9 +35,7 @@ export default class App extends React.Component {
       resList: [],
       loading: true
     });
-    const term = this.state.query;
-    const filter = this.state.filter;
-    const req = `https://swapi.co/api/${filter}/?search=${term}`;
+    const req = `https://swapi.co/api/${this.state.filter}/?search=${this.state.query}`;
 
     console.log(req);
 
@@ -72,7 +70,7 @@ export default class App extends React.Component {
 
   render() {
     console.log(this.state);
-    
+
     return (
       <div className='App'>
         <Header />

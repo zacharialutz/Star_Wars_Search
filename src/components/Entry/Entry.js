@@ -12,12 +12,15 @@ export default class Entry extends React.Component {
 	linebreak = String.fromCharCode(13, 10);
 
 	type = this.props.type;
+	me = this.props.thisOne;
 
-	peopleLinks = this.props.thisOne.pilots;
+	peopleLinks = this.me.pilots;
 	peopleNames = [];
-	homeworldLink = this.props.thisOne.homeworld;
+	shipLinks = this.me.starships;
+	shipNames = [];
+	homeworldLink = this.me.homeworld;
 	homeworldName = null;
-	speciesLink = this.props.thisOne.species;
+	speciesLink = this.me.species;
 	speciesName = null;
 
 	async componentDidMount() {
@@ -36,6 +39,15 @@ export default class Entry extends React.Component {
 				.then(data => {
 					this.speciesName = data.name;
 				});
+		}
+		if (this.shipLinks) {
+			for (let i = 0; i < this.shipLinks.length; i++) {
+				await fetch(this.shipLinks[i])
+					.then(res => res.json())
+					.then(data => {
+						this.shipNames.push(data.name);
+					})
+			}
 		}
 		if (this.homeworldLink) {
 			await fetch(this.homeworldLink)
@@ -56,7 +68,7 @@ export default class Entry extends React.Component {
 			output.push(this.renderCrosslink(type, links[i], names[i]));
 			if (i !== links.length - 1) output.push(this.linebreak);
 		}
-		return output
+		return output;
 	}
 
 	renderCrosslink(type, link, name) {
@@ -109,6 +121,17 @@ export default class Entry extends React.Component {
 							hair: {me.hair_color}<br />
 							eyes: {me.eye_color}
 						</li>
+						<li>
+							starships:<br />
+							{me.starships !== []
+								? this.listData(
+									'starships',
+									this.shipLinks,
+									this.shipNames
+								)
+								: <span>none</span>
+							}
+						</li>
 					</>
 				)
 			case 'starships':
@@ -132,10 +155,41 @@ export default class Entry extends React.Component {
 							length: {me.length}m<br />
 							max atmospheric speed: {me.max_atmosphering_speed}km/hour<br />
 							megalights: {me.MGLT}/hour<br />
-							hyperdrive rating: {me.hyperdrive_rating}<br />
+							hyperdrive rating: {me.hyperdrive_rating}
 						</li>
 						<li>
-							pilots:<br />
+							notable pilots:<br />
+							{me.pilots && this.listData(
+								'people',
+								this.peopleLinks,
+								this.peopleNames
+							)}
+						</li>
+					</>
+				)
+			case 'vehicles':
+				return (
+					<>
+						<li>
+							{me.manufacturer}<br />
+							{me.cost_in_credits} credits
+						</li>
+						<li>
+							model: {me.model}<br />
+							class: {me.vehicle_class}
+						</li>
+						<li>
+							crew: {me.crew}<br />
+							passengers: {me.passengers}<br />
+							cargo: {me.cargo_capacity}kg<br />
+							supplies: {me.consumables}
+						</li>
+						<li>
+							length: {me.length}m<br />
+							max atmospheric speed: {me.max_atmosphering_speed}km/hour
+						</li>
+						<li>
+							notable pilots:<br />
 							{me.pilots && this.listData(
 								'people',
 								this.peopleLinks,
@@ -153,13 +207,19 @@ export default class Entry extends React.Component {
 						<li>
 							length of day: {me.rotation_period} standard hours<br />
 							length of year: {me.orbital_period} standard days<br />
-							diameter: {me.diameter}km<br />
+							diameter: {me.diameter === 'unknown'
+								? 'unknown'
+								: <>{me.diameter}km</>
+							}<br />
 							gravity: {me.gravity}
 						</li>
 						<li>
 							climate: {me.climate}<br />
 							terrain: {me.terrain}<br />
-							surface water: {me.surface_water}%
+							surface water: {me.surface_water === 'unknown'
+								? 'unknown'
+								: <>{me.surface_water}%</>
+							}
 						</li>
 					</>
 				)
@@ -197,7 +257,7 @@ export default class Entry extends React.Component {
 	}
 
 	render() {
-		const me = this.props.thisOne;
+		const me = this.me;
 		if (me.manufacturer) me.manufacturer = me.manufacturer.replace(', ', this.linebreak);
 
 		return (
