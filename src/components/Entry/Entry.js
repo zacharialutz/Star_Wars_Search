@@ -9,13 +9,27 @@ export default class Entry extends React.Component {
 		error: null
 	}
 
+	linebreak = String.fromCharCode(13, 10);
+
 	type = this.props.type;
-	speciesLink = this.props.thisOne.species;
-	speciesName = null;
+
+	peopleLinks = this.props.thisOne.pilots;
+	peopleNames = [];
 	homeworldLink = this.props.thisOne.homeworld;
 	homeworldName = null;
+	speciesLink = this.props.thisOne.species;
+	speciesName = null;
 
 	async componentDidMount() {
+		if (this.peopleLinks) {
+			for (let i = 0; i < this.peopleLinks.length; i++) {
+				await fetch(this.peopleLinks[i])
+					.then(res => res.json())
+					.then(data => {
+						this.peopleNames.push(data.name);
+					})
+			}
+		}
 		if (this.speciesLink) {
 			await fetch(this.speciesLink)
 				.then(res => res.json())
@@ -23,7 +37,6 @@ export default class Entry extends React.Component {
 					this.speciesName = data.name;
 				});
 		}
-
 		if (this.homeworldLink) {
 			await fetch(this.homeworldLink)
 				.then(res => res.json())
@@ -37,41 +50,54 @@ export default class Entry extends React.Component {
 		})
 	}
 
+	listData = (type, links, names) => {
+		let output = [];
+		for (let i = 0; i < links.length; i++) {
+			output.push(this.renderCrosslink(type, links[i], names[i]));
+			if (i !== links.length - 1) output.push(this.linebreak);
+		}
+		return output
+	}
+
+	renderCrosslink(type, link, name) {
+		return (
+			<span
+				key={link}
+				className='crossRef'
+				tabIndex='0'
+				onClick={e => {
+					this.props.crossref(
+						e,
+						link,
+						type
+					)
+				}}>
+				{name}
+			</span>
+		)
+	}
+
 	renderStats(me) {
 		switch (this.type) {
 			case 'people':
 				return (
 					<>
 						<li>
-							<span
-								className='crossRef'
-								tabIndex='0'
-								onClick={e => {
-									this.props.crossref(
-										e,
-										this.speciesLink,
-										'species'
-									)
-								}}>
-								{this.speciesName}
-							</span> born {me.birth_year}
+							{this.renderCrosslink(
+								'species',
+								this.speciesLink,
+								this.speciesName
+							)} born {me.birth_year}
 						</li>
 						<li>
 							gender: {me.gender}<br />
 							homeworld: {this.homeworldName === 'unknown'
 								? <span>unknown</span>
-								: <span
-									className='crossRef'
-									tabIndex='0'
-									onClick={e => {
-										this.props.crossref(
-											e,
-											this.homeworldLink,
-											'planets'
-										)
-									}}>
-									{this.homeworldName}
-								</span>
+								: this.renderCrosslink(
+									'planets',
+									this.homeworldLink,
+									this.homeworldName
+								)
 							}
 						</li>
 						<li>
@@ -82,6 +108,39 @@ export default class Entry extends React.Component {
 							skin: {me.skin_color}<br />
 							hair: {me.hair_color}<br />
 							eyes: {me.eye_color}
+						</li>
+					</>
+				)
+			case 'starships':
+				return (
+					<>
+						<li>
+							{me.manufacturer}<br />
+							{me.cost_in_credits} credits
+						</li>
+						<li>
+							model: {me.model}<br />
+							class: {me.starship_class}
+						</li>
+						<li>
+							crew: {me.crew}<br />
+							passengers: {me.passengers}<br />
+							cargo: {me.cargo_capacity}kg<br />
+							supplies: {me.consumables}
+						</li>
+						<li>
+							length: {me.length}m<br />
+							max atmospheric speed: {me.max_atmosphering_speed}km/hour<br />
+							megalights: {me.MGLT}/hour<br />
+							hyperdrive rating: {me.hyperdrive_rating}<br />
+						</li>
+						<li>
+							pilots:<br />
+							{me.pilots && this.listData(
+								'people',
+								this.peopleLinks,
+								this.peopleNames
+							)}
 						</li>
 					</>
 				)
@@ -123,18 +182,11 @@ export default class Entry extends React.Component {
 							language: {me.language}<br />
 							homeworld: {this.homeworldName === 'unknown'
 								? <span>unknown</span>
-								: <span
-									className='crossRef'
-									tabIndex='0'
-									onClick={e => {
-										this.props.crossref(
-											e,
-											this.homeworldLink,
-											'planets'
-										)
-									}}>
-									{this.homeworldName}
-								</span>
+								: this.renderCrosslink(
+									'planets',
+									this.homeworldLink,
+									this.homeworldName
+								)
 							}
 						</li>
 					</>
@@ -146,7 +198,7 @@ export default class Entry extends React.Component {
 
 	render() {
 		const me = this.props.thisOne;
-		console.log(this.props);
+		if (me.manufacturer) me.manufacturer = me.manufacturer.replace(', ', this.linebreak);
 
 		return (
 			<li className='listing'>

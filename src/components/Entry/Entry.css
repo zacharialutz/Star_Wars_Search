@@ -3,6 +3,7 @@ li {
 	font-family: 'Share Tech Mono', monospace;
 	color: gold;
 	margin: 0 0 25px;
+	white-space: pre-wrap;
 }
 
 .crossRef {

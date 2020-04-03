@@ -16,11 +16,3 @@ body {
 .loader, footer {
   color: rgb(226, 226, 226);
 }
-
-footer {
-  font-size: 16px;
-}
-
-footer a {
-  color: rgb(226, 226, 226);
-}
