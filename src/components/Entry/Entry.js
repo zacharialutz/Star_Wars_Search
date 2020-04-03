@@ -271,8 +271,11 @@ export default class Entry extends React.Component {
 							{me.designation} {me.classification}
 						</li>
 						<li style={this.randomFadeTime()}>
-							average lifespan: {me.average_lifespan} years<br />
-							average height: {(me.average_height * .01).toFixed(2)}m
+							average lifespan: {me.average_lifespan}{typeof parseInt(me.average_lifespan, 10) === 'number' && <> years</>}<br />
+							average height: {typeof me.average_height === 'number'
+								? <>{(me.average_height * .01).toFixed(2)}m</>
+								: me.average_height
+							}
 						</li>
 						<li style={this.randomFadeTime()}>
 							skin: {me.skin_colors}<br />

@@ -77,8 +77,8 @@ export default class App extends React.Component {
         <main>
           <Form
             handleSubmit={this.handleSubmit}
-            query={this.query}
-            filter={this.filter}
+            query={this.state.query}
+            filter={this.state.filter}
             searchChanged={this.searchChanged}
             filterChanged={this.filterChanged}
           />
