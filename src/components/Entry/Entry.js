@@ -14,7 +14,7 @@ export default class Entry extends React.Component {
 	type = this.props.type;
 	me = this.props.thisOne;
 
-	peopleLinks = this.me.pilots;
+	peopleLinks = this.me.pilots || this.me.characters;
 	peopleNames = [];
 	shipLinks = this.me.starships;
 	shipNames = [];
@@ -22,10 +22,10 @@ export default class Entry extends React.Component {
 	vehicleNames = [];
 	homeworldLink = this.me.homeworld;
 	homeworldName = null;
-	speciesLink = this.me.species;
-	speciesName = null;
-	speciesFilmLinks = this.me.species;
-	speciesFilmNames = [];
+	speciesLinks = this.me.species;
+	speciesNames = [];
+	planetLinks = this.me.planets;
+	planetNames = [];
 
 	randomFadeTime() {
 		return ({ animationDuration: `${Math.random() + 0.5}s` })
@@ -41,18 +41,12 @@ export default class Entry extends React.Component {
 					})
 			}
 		}
-		if (this.speciesLink)
-			await fetch(this.speciesLink)
-				.then(res => res.json())
-				.then(data => {
-					this.speciesName = data.name;
-				})
-		if (this.speciesFilmLinks && this.speciesFilmLinks.length > 0) {
-			for (let i = 0; i < this.speciesFilmLinks.length; i++) {
-				await fetch(this.speciesFilmLinks[i])
+		if (this.speciesLinks) {
+			for (let i = 0; i < this.speciesLinks.length; i++) {
+				await fetch(this.speciesLinks[i])
 					.then(res => res.json())
 					.then(data => {
-						this.speciesFilmNames.push(data.name);
+						this.speciesNames.push(data.name);
 					})
 			}
 		}
@@ -80,6 +74,15 @@ export default class Entry extends React.Component {
 				.then(data => {
 					this.homeworldName = data.name;
 				});
+		}
+		if (this.planetLinks) {
+			for (let i = 0; i < this.planetLinks.length; i++) {
+				await fetch(this.planetLinks[i])
+					.then(res => res.json())
+					.then(data => {
+						this.planetNames.push(data.name);
+					})
+			}
 		}
 
 		this.setState({
@@ -122,8 +125,8 @@ export default class Entry extends React.Component {
 						<li style={this.randomFadeTime()}>
 							{this.renderCrosslink(
 								'species',
-								this.speciesLink,
-								this.speciesName
+								this.speciesLinks,
+								this.speciesNames
 							)} born {me.birth_year}
 						</li>
 						<li style={this.randomFadeTime()}>
@@ -302,6 +305,46 @@ export default class Entry extends React.Component {
 							release date: {me.release_date}<br />
 							director: {me.director}<br />
 							producer: {me.producer}
+						</li>
+						<li style={this.randomFadeTime()}>
+							characters:<br />
+							{this.listData(
+								'people',
+								this.peopleLinks,
+								this.peopleNames
+							)}
+						</li>
+						<li style={this.randomFadeTime()}>
+							planets:<br />
+							{this.listData(
+								'planets',
+								this.planetLinks,
+								this.planetNames
+							)}
+						</li>
+						<li style={this.randomFadeTime()}>
+							starships:<br />
+							{this.listData(
+								'starships',
+								this.shipLinks,
+								this.shipNames
+							)}
+						</li>
+						<li style={this.randomFadeTime()}>
+							vehicles:<br />
+							{this.listData(
+								'vehicles',
+								this.vehicleLinks,
+								this.vehicleNames
+							)}
+						</li>
+						<li style={this.randomFadeTime()}>
+							species:<br />
+							{this.listData(
+								'species',
+								this.speciesLinks,
+								this.speciesNames
+							)}
 						</li>
 					</>
 				)
