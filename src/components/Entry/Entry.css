@@ -1,9 +1,18 @@
+.Entry {
+	margin-bottom: 56px;
+}
+.Entry h2 {
+	animation-name: fade-in;
+	animation-duration: var(--fade-standard);
+}
+
 li {
 	list-style: none;
 	font-family: 'Share Tech Mono', monospace;
 	color: gold;
 	margin: 0 0 25px;
 	white-space: pre-wrap;
+	animation-name: fade-in;
 }
 
 .crossRef {

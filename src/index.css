@@ -2,6 +2,8 @@
   --text-white: rgb(226, 226, 226);
   --text-dim: rgb(172, 172, 172);
   --color-bg: #1e2127;
+
+  --fade-standard: 0.4s;
 }
 
 @font-face {

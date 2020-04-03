@@ -1,0 +1,4 @@
+.Loading {
+	animation-name: fade-in;
+	animation-duration: var(--fade-standard);
+}

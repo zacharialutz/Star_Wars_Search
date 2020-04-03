@@ -24,6 +24,12 @@ export default class Entry extends React.Component {
 	homeworldName = null;
 	speciesLink = this.me.species;
 	speciesName = null;
+	speciesFilmLinks = this.me.species;
+	speciesFilmNames = [];
+
+	randomFadeTime() {
+		return ({ animationDuration: `${Math.random() + 0.5}s` })
+	}
 
 	async componentDidMount() {
 		if (this.peopleLinks && this.peopleLinks.length > 0) {
@@ -35,19 +41,21 @@ export default class Entry extends React.Component {
 					})
 			}
 		}
-		typeof this.speciesLink === 'string'
-			? await fetch(this.speciesLink)
+		if (this.speciesLink)
+			await fetch(this.speciesLink)
 				.then(res => res.json())
 				.then(data => {
 					this.speciesName = data.name;
 				})
-			: for (let i = 0; i < this.peopleLinks.length; i++) {
-				await fetch(this.speciesLink)
-				.then(res => res.json())
-				.then(data => {
-					this.speciesName = data.name;
-				})
+		if (this.speciesFilmLinks && this.speciesFilmLinks.length > 0) {
+			for (let i = 0; i < this.speciesFilmLinks.length; i++) {
+				await fetch(this.speciesFilmLinks[i])
+					.then(res => res.json())
+					.then(data => {
+						this.speciesFilmNames.push(data.name);
+					})
 			}
+		}
 		if (this.shipLinks) {
 			for (let i = 0; i < this.shipLinks.length; i++) {
 				await fetch(this.shipLinks[i])
@@ -111,14 +119,14 @@ export default class Entry extends React.Component {
 			case 'people':
 				return (
 					<>
-						<li>
+						<li style={this.randomFadeTime()}>
 							{this.renderCrosslink(
 								'species',
 								this.speciesLink,
 								this.speciesName
 							)} born {me.birth_year}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							gender: {me.gender}<br />
 							homeworld: {this.homeworldName === 'unknown'
 								? <span>unknown</span>
@@ -129,17 +137,17 @@ export default class Entry extends React.Component {
 								)
 							}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							height: {(me.height * .01).toFixed(2)}{me.height !== 'unknown' && <span>m</span>}<br />
 							weight: {me.mass}{me.mass !== 'unknown' && <span>kg</span>}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							skin: {me.skin_color}<br />
 							hair: {me.hair_color}<br />
 							eyes: {me.eye_color}
 						</li>
 						{this.shipNames && this.shipNames.length > 0 &&
-							<li>
+							<li style={this.randomFadeTime()}>
 								starships:<br />
 								{this.listData(
 									'starships',
@@ -149,7 +157,7 @@ export default class Entry extends React.Component {
 							</li>
 						}
 						{this.vehicleNames && this.vehicleNames.length > 0 &&
-							<li>
+							<li style={this.randomFadeTime()}>
 								vehicles:<br />
 								{this.listData(
 									'vehicles',
@@ -163,28 +171,28 @@ export default class Entry extends React.Component {
 			case 'starships':
 				return (
 					<>
-						<li>
+						<li style={this.randomFadeTime()}>
 							{me.manufacturer}<br />
 							{me.cost_in_credits} credits
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							model: {me.model}<br />
 							class: {me.starship_class}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							crew: {me.crew}<br />
 							passengers: {me.passengers}<br />
 							cargo: {me.cargo_capacity}kg<br />
 							supplies: {me.consumables}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							length: {me.length}m<br />
 							max atmospheric speed: {me.max_atmosphering_speed}km/hour<br />
 							megalights: {me.MGLT}/hour<br />
 							hyperdrive rating: {me.hyperdrive_rating}
 						</li>
 						{this.peopleNames.length > 0 &&
-							<li>
+							<li style={this.randomFadeTime()}>
 								notable pilots:<br />
 								{me.pilots && this.listData(
 									'people',
@@ -198,26 +206,26 @@ export default class Entry extends React.Component {
 			case 'vehicles':
 				return (
 					<>
-						<li>
+						<li style={this.randomFadeTime()}>
 							{me.manufacturer}<br />
 							{me.cost_in_credits} credits
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							model: {me.model}<br />
 							class: {me.vehicle_class}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							crew: {me.crew}<br />
 							passengers: {me.passengers}<br />
 							cargo: {me.cargo_capacity}kg<br />
 							supplies: {me.consumables}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							length: {me.length}m<br />
 							max atmospheric speed: {me.max_atmosphering_speed}km/hour
 						</li>
 						{this.peopleNames.length > 0 &&
-							<li>
+							<li style={this.randomFadeTime()}>
 								notable pilots:<br />
 								{me.pilots && this.listData(
 									'people',
@@ -231,10 +239,10 @@ export default class Entry extends React.Component {
 			case 'planets':
 				return (
 					<>
-						<li>
+						<li style={this.randomFadeTime()}>
 							population: {me.population}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							length of day: {me.rotation_period} standard hours<br />
 							length of year: {me.orbital_period} standard days<br />
 							diameter: {me.diameter === 'unknown'
@@ -243,7 +251,7 @@ export default class Entry extends React.Component {
 							}<br />
 							gravity: {me.gravity}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							climate: {me.climate}<br />
 							terrain: {me.terrain}<br />
 							surface water: {me.surface_water === 'unknown'
@@ -256,19 +264,19 @@ export default class Entry extends React.Component {
 			case 'species':
 				return (
 					<>
-						<li>
+						<li style={this.randomFadeTime()}>
 							{me.designation} {me.classification}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							average lifespan: {me.average_lifespan} years<br />
 							average height: {(me.average_height * .01).toFixed(2)}m
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							skin: {me.skin_colors}<br />
 							hair: {me.hair_colors}<br />
 							eyes: {me.eye_colors}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							language: {me.language}<br />
 							homeworld: {this.homeworldName === 'unknown'
 								? 'unknown'
@@ -284,13 +292,13 @@ export default class Entry extends React.Component {
 			case 'films':
 				return (
 					<>
-						<li>
+						<li style={this.randomFadeTime()}>
 							episode {me.episode_id}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							{me.opening_crawl}
 						</li>
-						<li>
+						<li style={this.randomFadeTime()}>
 							release date: {me.release_date}<br />
 							director: {me.director}<br />
 							producer: {me.producer}
@@ -308,7 +316,7 @@ export default class Entry extends React.Component {
 
 		console.log(me);
 		return (
-			<li className='listing'>
+			<li className='Entry'>
 				<h2>{me.title || me.name}</h2>
 
 				{this.state.loading
