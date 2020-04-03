@@ -2,6 +2,9 @@ footer {
 	font-size: 17px;
 }
   
-footer a, footer a:visited {
-	color: rgb(226, 226, 226);
+footer a {
+	color: var(--text-dim);
+}
+footer a:hover {
+	color: var(--text-white);
 }

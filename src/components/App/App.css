@@ -8,11 +8,11 @@
 }
 
 body {
-  background-color: #1e2127;
+  background-color: var(--color-bg);
   background-image: url('../../background.jpg');
   background-size: cover;
 }
 
 .loader, footer {
-  color: rgb(226, 226, 226);
+  color: var(--text-white);
 }

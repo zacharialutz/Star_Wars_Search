@@ -1,6 +1,6 @@
 .Header {
 	font-family: 'Distant-Galaxy', 'Teko', sans-serif;
-	background-color: #1e2127;
+	background-color: var(--color-bg);
 	display: flex;
 	flex-direction: column;
 	align-items: center;

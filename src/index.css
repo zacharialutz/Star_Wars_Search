@@ -1,3 +1,9 @@
+:root {
+  --text-white: rgb(226, 226, 226);
+  --text-dim: rgb(172, 172, 172);
+  --color-bg: #1e2127;
+}
+
 @font-face {
   font-family: 'Distant-Galaxy';
   src: url('sf_distant_galaxy_outline.ttf')
