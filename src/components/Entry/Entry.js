@@ -18,13 +18,15 @@ export default class Entry extends React.Component {
 	peopleNames = [];
 	shipLinks = this.me.starships;
 	shipNames = [];
+	vehicleLinks = this.me.vehicles;
+	vehicleNames = [];
 	homeworldLink = this.me.homeworld;
 	homeworldName = null;
 	speciesLink = this.me.species;
 	speciesName = null;
 
 	async componentDidMount() {
-		if (this.peopleLinks) {
+		if (this.peopleLinks && this.peopleLinks.length > 0) {
 			for (let i = 0; i < this.peopleLinks.length; i++) {
 				await fetch(this.peopleLinks[i])
 					.then(res => res.json())
@@ -33,19 +35,34 @@ export default class Entry extends React.Component {
 					})
 			}
 		}
-		if (this.speciesLink) {
-			await fetch(this.speciesLink)
+		typeof this.speciesLink === 'string'
+			? await fetch(this.speciesLink)
 				.then(res => res.json())
 				.then(data => {
 					this.speciesName = data.name;
-				});
-		}
+				})
+			: for (let i = 0; i < this.peopleLinks.length; i++) {
+				await fetch(this.speciesLink)
+				.then(res => res.json())
+				.then(data => {
+					this.speciesName = data.name;
+				})
+			}
 		if (this.shipLinks) {
 			for (let i = 0; i < this.shipLinks.length; i++) {
 				await fetch(this.shipLinks[i])
 					.then(res => res.json())
 					.then(data => {
 						this.shipNames.push(data.name);
+					})
+			}
+		}
+		if (this.vehicleLinks) {
+			for (let i = 0; i < this.vehicleLinks.length; i++) {
+				await fetch(this.vehicleLinks[i])
+					.then(res => res.json())
+					.then(data => {
+						this.vehicleNames.push(data.name);
 					})
 			}
 		}
@@ -121,17 +138,26 @@ export default class Entry extends React.Component {
 							hair: {me.hair_color}<br />
 							eyes: {me.eye_color}
 						</li>
-						<li>
-							starships:<br />
-							{me.starships !== []
-								? this.listData(
+						{this.shipNames && this.shipNames.length > 0 &&
+							<li>
+								starships:<br />
+								{this.listData(
 									'starships',
 									this.shipLinks,
 									this.shipNames
-								)
-								: <span>none</span>
-							}
-						</li>
+								)}
+							</li>
+						}
+						{this.vehicleNames && this.vehicleNames.length > 0 &&
+							<li>
+								vehicles:<br />
+								{this.listData(
+									'vehicles',
+									this.vehicleLinks,
+									this.vehicleNames
+								)}
+							</li>
+						}
 					</>
 				)
 			case 'starships':
@@ -157,14 +183,16 @@ export default class Entry extends React.Component {
 							megalights: {me.MGLT}/hour<br />
 							hyperdrive rating: {me.hyperdrive_rating}
 						</li>
-						<li>
-							notable pilots:<br />
-							{me.pilots && this.listData(
-								'people',
-								this.peopleLinks,
-								this.peopleNames
-							)}
-						</li>
+						{this.peopleNames.length > 0 &&
+							<li>
+								notable pilots:<br />
+								{me.pilots && this.listData(
+									'people',
+									this.peopleLinks,
+									this.peopleNames
+								)}
+							</li>
+						}
 					</>
 				)
 			case 'vehicles':
@@ -188,14 +216,16 @@ export default class Entry extends React.Component {
 							length: {me.length}m<br />
 							max atmospheric speed: {me.max_atmosphering_speed}km/hour
 						</li>
-						<li>
-							notable pilots:<br />
-							{me.pilots && this.listData(
-								'people',
-								this.peopleLinks,
-								this.peopleNames
-							)}
-						</li>
+						{this.peopleNames.length > 0 &&
+							<li>
+								notable pilots:<br />
+								{me.pilots && this.listData(
+									'people',
+									this.peopleLinks,
+									this.peopleNames
+								)}
+							</li>
+						}
 					</>
 				)
 			case 'planets':
@@ -241,13 +271,29 @@ export default class Entry extends React.Component {
 						<li>
 							language: {me.language}<br />
 							homeworld: {this.homeworldName === 'unknown'
-								? <span>unknown</span>
+								? 'unknown'
 								: this.renderCrosslink(
 									'planets',
 									this.homeworldLink,
 									this.homeworldName
 								)
 							}
+						</li>
+					</>
+				)
+			case 'films':
+				return (
+					<>
+						<li>
+							episode {me.episode_id}
+						</li>
+						<li>
+							{me.opening_crawl}
+						</li>
+						<li>
+							release date: {me.release_date}<br />
+							director: {me.director}<br />
+							producer: {me.producer}
 						</li>
 					</>
 				)
@@ -260,6 +306,7 @@ export default class Entry extends React.Component {
 		const me = this.me;
 		if (me.manufacturer) me.manufacturer = me.manufacturer.replace(', ', this.linebreak);
 
+		console.log(me);
 		return (
 			<li className='listing'>
 				<h2>{me.title || me.name}</h2>
