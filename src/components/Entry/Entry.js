@@ -12,7 +12,7 @@ export default class Entry extends React.Component {
 	linebreak = String.fromCharCode(13, 10);
 
 	type = this.props.type;
-	me = this.props.thisOne;
+	me = this.props.thisOne || {};
 
 	peopleLinks = this.me.pilots || this.me.characters;
 	peopleNames = [];
@@ -26,6 +26,18 @@ export default class Entry extends React.Component {
 	speciesNames = [];
 	planetLinks = this.me.planets;
 	planetNames = [];
+
+	insertCommas(str) {
+		let output = '';
+		const spacer = str.length % 3;
+		for (let i = 0; i < str.length; i++) {
+			output += str[i];
+			if (i === spacer - 1 || (i - spacer) % 3 === 0) {
+				output += ',';
+			}
+		}
+		return output;
+	}
 
 	randomFadeTime() {
 		return ({ animationDuration: `${Math.random() + 0.5}s` })
