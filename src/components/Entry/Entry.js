@@ -32,7 +32,7 @@ export default class Entry extends React.Component {
 		const spacer = str.length % 3;
 		for (let i = 0; i < str.length; i++) {
 			output += str[i];
-			if (i === spacer - 1 || (i - spacer) % 3 === 0) {
+			if ((i - spacer + 1) % 3 === 0 && i !== str.length - 1) {
 				output += ',';
 			}
 		}
@@ -254,15 +254,18 @@ export default class Entry extends React.Component {
 			case 'planets':
 				return (
 					<>
-						<li style={this.randomFadeTime()}>
-							population: {me.population}
+						<li className={'liPopulation'} style={this.randomFadeTime()}>
+							population: {me.population === 'unknown'
+								? 'unknown'
+								: <>{this.insertCommas(me.population)}</>
+								}
 						</li>
 						<li style={this.randomFadeTime()}>
 							length of day: {me.rotation_period} standard hours<br />
 							length of year: {me.orbital_period} standard days<br />
 							diameter: {me.diameter === 'unknown'
 								? 'unknown'
-								: <>{me.diameter}km</>
+								: <>{this.insertCommas(me.diameter)}km</>
 							}<br />
 							gravity: {me.gravity}
 						</li>
@@ -372,7 +375,7 @@ export default class Entry extends React.Component {
 		const me = this.me;
 		if (me.manufacturer) me.manufacturer = me.manufacturer.replace(', ', this.linebreak);
 
-		console.log(me);
+		console.log(this.me);
 		return (
 			<li className='Entry'>
 				<h2>{me.title || me.name}</h2>
