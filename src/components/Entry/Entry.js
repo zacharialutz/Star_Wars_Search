@@ -9,8 +9,6 @@ export default class Entry extends React.Component {
 		error: null
 	}
 
-	linebreak = String.fromCharCode(13, 10);
-
 	type = this.props.type;
 	me = this.props.thisOne || {};
 
@@ -22,10 +20,14 @@ export default class Entry extends React.Component {
 	vehicleNames = [];
 	homeworldLink = this.me.homeworld;
 	homeworldName = null;
-	speciesLinks = this.me.species;
-	speciesNames = [];
 	planetLinks = this.me.planets;
 	planetNames = [];
+	speciesLinks = this.me.species;
+	speciesNames = [];
+	filmLinks = this.me.films;
+	filmNames = [];
+
+	linebreak = String.fromCharCode(13, 10);
 
 	insertCommas(str) {
 		let output = '';
@@ -44,7 +46,7 @@ export default class Entry extends React.Component {
 	}
 
 	async componentDidMount() {
-		if (this.peopleLinks && this.peopleLinks.length > 0) {
+		if (this.peopleLinks) {
 			for (let i = 0; i < this.peopleLinks.length; i++) {
 				await fetch(this.peopleLinks[i])
 					.then(res => res.json())
@@ -93,6 +95,15 @@ export default class Entry extends React.Component {
 					.then(res => res.json())
 					.then(data => {
 						this.planetNames.push(data.name);
+					})
+			}
+		}
+		if (this.filmLinks) {
+			for (let i = 0; i < this.filmLinks.length; i++) {
+				await fetch(this.filmLinks[i])
+					.then(res => res.json())
+					.then(data => {
+						this.filmNames.push(data.title);
 					})
 			}
 		}
@@ -161,17 +172,7 @@ export default class Entry extends React.Component {
 							hair: {me.hair_color}<br />
 							eyes: {me.eye_color}
 						</li>
-						{this.shipNames && this.shipNames.length > 0 &&
-							<li style={this.randomFadeTime()}>
-								starships:<br />
-								{this.listData(
-									'starships',
-									this.shipLinks,
-									this.shipNames
-								)}
-							</li>
-						}
-						{this.vehicleNames && this.vehicleNames.length > 0 &&
+						{this.vehicleNames.length > 0 &&
 							<li style={this.randomFadeTime()}>
 								vehicles:<br />
 								{this.listData(
@@ -181,6 +182,24 @@ export default class Entry extends React.Component {
 								)}
 							</li>
 						}
+						{this.shipNames.length > 0 &&
+							<li style={this.randomFadeTime()}>
+								starships:<br />
+								{this.listData(
+									'starships',
+									this.shipLinks,
+									this.shipNames
+								)}
+							</li>
+						}
+						<li style={this.randomFadeTime()}>
+							films:<br />
+							{this.listData(
+								'films',
+								this.filmLinks,
+								this.filmNames
+							)}
+						</li>
 					</>
 				)
 			case 'starships':
@@ -188,7 +207,7 @@ export default class Entry extends React.Component {
 					<>
 						<li style={this.randomFadeTime()}>
 							{me.manufacturer}<br />
-							{me.cost_in_credits} credits
+							{this.insertCommas(me.cost_in_credits)} credits
 						</li>
 						<li style={this.randomFadeTime()}>
 							model: {me.model}<br />
@@ -197,12 +216,12 @@ export default class Entry extends React.Component {
 						<li style={this.randomFadeTime()}>
 							crew: {me.crew}<br />
 							passengers: {me.passengers}<br />
-							cargo: {me.cargo_capacity}kg<br />
+							cargo: {this.insertCommas(me.cargo_capacity)}kg<br />
 							supplies: {me.consumables}
 						</li>
 						<li style={this.randomFadeTime()}>
 							length: {me.length}m<br />
-							max atmospheric speed: {me.max_atmosphering_speed}km/hour<br />
+							max atmospheric speed: {this.insertCommas(me.max_atmosphering_speed)}km/hour<br />
 							megalights: {me.MGLT}/hour<br />
 							hyperdrive rating: {me.hyperdrive_rating}
 						</li>
@@ -216,6 +235,14 @@ export default class Entry extends React.Component {
 								)}
 							</li>
 						}
+						<li style={this.randomFadeTime()}>
+							films:<br />
+							{this.listData(
+								'films',
+								this.filmLinks,
+								this.filmNames
+							)}
+						</li>
 					</>
 				)
 			case 'vehicles':
@@ -223,7 +250,7 @@ export default class Entry extends React.Component {
 					<>
 						<li style={this.randomFadeTime()}>
 							{me.manufacturer}<br />
-							{me.cost_in_credits} credits
+							{this.insertCommas(me.cost_in_credits)} credits
 						</li>
 						<li style={this.randomFadeTime()}>
 							model: {me.model}<br />
@@ -232,12 +259,12 @@ export default class Entry extends React.Component {
 						<li style={this.randomFadeTime()}>
 							crew: {me.crew}<br />
 							passengers: {me.passengers}<br />
-							cargo: {me.cargo_capacity}kg<br />
+							cargo: {this.insertCommas(me.cargo_capacity)}kg<br />
 							supplies: {me.consumables}
 						</li>
 						<li style={this.randomFadeTime()}>
 							length: {me.length}m<br />
-							max atmospheric speed: {me.max_atmosphering_speed}km/hour
+							max atmospheric speed: {this.insertCommas(me.max_atmosphering_speed)}km/hour
 						</li>
 						{this.peopleNames.length > 0 &&
 							<li style={this.randomFadeTime()}>
@@ -249,6 +276,14 @@ export default class Entry extends React.Component {
 								)}
 							</li>
 						}
+						<li style={this.randomFadeTime()}>
+							films:<br />
+							{this.listData(
+								'films',
+								this.filmLinks,
+								this.filmNames
+							)}
+						</li>
 					</>
 				)
 			case 'planets':
@@ -258,7 +293,7 @@ export default class Entry extends React.Component {
 							population: {me.population === 'unknown'
 								? 'unknown'
 								: <>{this.insertCommas(me.population)}</>
-								}
+							}
 						</li>
 						<li style={this.randomFadeTime()}>
 							length of day: {me.rotation_period} standard hours<br />
@@ -276,6 +311,14 @@ export default class Entry extends React.Component {
 								? 'unknown'
 								: <>{me.surface_water}%</>
 							}
+						</li>
+						<li style={this.randomFadeTime()}>
+							films:<br />
+							{this.listData(
+								'films',
+								this.filmLinks,
+								this.filmNames
+							)}
 						</li>
 					</>
 				)
@@ -307,6 +350,14 @@ export default class Entry extends React.Component {
 									this.homeworldName
 								)
 							}
+						</li>
+						<li style={this.randomFadeTime()}>
+							films:<br />
+							{this.listData(
+								'films',
+								this.filmLinks,
+								this.filmNames
+							)}
 						</li>
 					</>
 				)
