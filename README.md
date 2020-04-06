@@ -1,4 +1,4 @@
-# Star Wars Search
+# Star Wars Searcher
 Created by Zacharia Lutz 2020
 
 ## About

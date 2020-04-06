@@ -4,7 +4,7 @@ import './Header.css';
 export default function Header() {
 	return (
 		<header className='Header'>
-			<h1>STAR WARS SEARCH</h1>
+			<h1>STAR WARS SEARCHER</h1>
 		</header>
 	)
 }
