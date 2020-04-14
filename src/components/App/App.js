@@ -29,7 +29,7 @@ export default class App extends React.Component {
     });
   }
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
     this.setState({
       resList: [],
@@ -60,7 +60,6 @@ export default class App extends React.Component {
     fetch(query)
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         this.setState({
           resList: [data],
           loading: false

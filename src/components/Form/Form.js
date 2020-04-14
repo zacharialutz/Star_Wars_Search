@@ -3,7 +3,7 @@ import './Form.css'
 
 export default function Form(props) {
 	return (
-		<form onSubmit={e => props.handleSubmit(e)}>
+		<form onSubmit={async e => await props.handleSubmit(e)}>
 			<label htmlFor='search'>Search: </label>
 			<input
 				type='text'

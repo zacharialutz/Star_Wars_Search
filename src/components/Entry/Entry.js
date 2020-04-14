@@ -12,15 +12,13 @@ export default class Entry extends React.Component {
 	type = this.props.type;
 	me = this.props.thisOne || {};
 
-	peopleLinks = this.me.pilots || this.me.characters;
+	peopleLinks = this.me.pilots || this.me.residents || this.me.characters;
 	peopleNames = [];
 	shipLinks = this.me.starships;
 	shipNames = [];
 	vehicleLinks = this.me.vehicles;
 	vehicleNames = [];
-	homeworldLink = this.me.homeworld;
-	homeworldName = null;
-	planetLinks = this.me.planets;
+	planetLinks = this.me.planets || [this.me.homeworld];
 	planetNames = [];
 	speciesLinks = this.me.species;
 	speciesNames = [];
@@ -41,85 +39,46 @@ export default class Entry extends React.Component {
 		return output;
 	}
 
-	randomFadeTime() {
-		return ({ animationDuration: `${Math.random() + 0.5}s` })
+	randomFadeTime = () => { return { animationDuration: `${Math.random() + 0.5}s` } }
+
+	async loadLinks(inputArr) {
+		const nameArr = [];
+
+		for (let i = 0; i < inputArr.length; i++) {
+			await fetch(inputArr[i])
+				.then(res => res.json())
+				.then(data => {
+					nameArr.push(data.name || data.title);
+				})
+		}
+
+		return nameArr;
 	}
 
 	async componentDidMount() {
-		if (this.peopleLinks) {
-			for (let i = 0; i < this.peopleLinks.length; i++) {
-				await fetch(this.peopleLinks[i])
-					.then(res => res.json())
-					.then(data => {
-						this.peopleNames.push(data.name);
-					})
-			}
-		}
-		if (this.speciesLinks) {
-			for (let i = 0; i < this.speciesLinks.length; i++) {
-				await fetch(this.speciesLinks[i])
-					.then(res => res.json())
-					.then(data => {
-						this.speciesNames.push(data.name);
-					})
-			}
-		}
-		if (this.shipLinks) {
-			for (let i = 0; i < this.shipLinks.length; i++) {
-				await fetch(this.shipLinks[i])
-					.then(res => res.json())
-					.then(data => {
-						this.shipNames.push(data.name);
-					})
-			}
-		}
-		if (this.vehicleLinks) {
-			for (let i = 0; i < this.vehicleLinks.length; i++) {
-				await fetch(this.vehicleLinks[i])
-					.then(res => res.json())
-					.then(data => {
-						this.vehicleNames.push(data.name);
-					})
-			}
-		}
-		if (this.homeworldLink) {
-			await fetch(this.homeworldLink)
-				.then(res => res.json())
-				.then(data => {
-					this.homeworldName = data.name;
-				});
-		}
-		if (this.planetLinks) {
-			for (let i = 0; i < this.planetLinks.length; i++) {
-				await fetch(this.planetLinks[i])
-					.then(res => res.json())
-					.then(data => {
-						this.planetNames.push(data.name);
-					})
-			}
-		}
-		if (this.filmLinks) {
-			for (let i = 0; i < this.filmLinks.length; i++) {
-				await fetch(this.filmLinks[i])
-					.then(res => res.json())
-					.then(data => {
-						this.filmNames.push(data.title);
-					})
-			}
-		}
+		// const linkArr = [
+		// 	[this.peopleLinks, this.peopleNames],
+		// 	[this.shipLinks, this.shipNames],
+		// 	[this.vehicleLinks, this.vehicleNames],
+		// 	[this.planetLinks, this.planetNames],
+		// 	[this.speciesLinks, this.speciesNames],
+		// 	[this.filmLinks, this.filmNames]
+		// ];
+		// for (let i = 0; i < linkArr.length; i++) {
+		// 	if (linkArr[i][0]) linkArr[i][1] = await this.loadLinks(linkArr[i][0]);
+		// 	console.log('this.names: ' + linkArr[i][1]);
+		// }
+
+		if (this.peopleLinks) this.peopleNames = await this.loadLinks(this.peopleLinks);
+		if (this.shipLinks) this.shipNames = await this.loadLinks(this.shipLinks);
+		if (this.vehicleLinks) this.vehicleNames = await this.loadLinks(this.vehicleLinks);
+		if (this.planetLinks) this.planetNames = await this.loadLinks(this.planetLinks);
+		if (this.speciesLinks) this.speciesNames = await this.loadLinks(this.speciesLinks);
+		if (this.filmLinks) this.filmNames = await this.loadLinks(this.filmLinks);
 
 		this.setState({
 			loading: false
 		})
-	}
-
-	listData = (type, links, names) => {
-		let output = [];
-		for (let i = 0; i < links.length; i++) {
-			output.push(this.renderCrosslink(type, links[i], names[i]));
-			if (i !== links.length - 1) output.push(this.linebreak);
-		}
-		return output;
 	}
 
 	renderCrosslink(type, link, name) {
@@ -140,6 +99,15 @@ export default class Entry extends React.Component {
 		)
 	}
 
+	listData = (type, links, names) => {
+		let output = [];
+		for (let i = 0; i < links.length; i++) {
+			output.push(this.renderCrosslink(type, links[i], names[i]));
+			if (i !== links.length - 1) output.push(this.linebreak);
+		}
+		return output;
+	}
+
 	renderStats(me) {
 		switch (this.type) {
 			case 'people':
@@ -154,12 +122,12 @@ export default class Entry extends React.Component {
 						</li>
 						<li style={this.randomFadeTime()}>
 							gender: {me.gender}<br />
-							homeworld: {this.homeworldName === 'unknown'
+							homeworld: {this.planetNames[0] === 'unknown'
 								? <span>unknown</span>
 								: this.renderCrosslink(
 									'planets',
-									this.homeworldLink,
-									this.homeworldName
+									this.planetLinks,
+									this.planetNames
 								)
 							}
 						</li>
@@ -312,6 +280,16 @@ export default class Entry extends React.Component {
 								: <>{me.surface_water}%</>
 							}
 						</li>
+						{this.peopleNames.length > 0 &&
+							<li style={this.randomFadeTime()}>
+								notable residents:<br />
+								{me.residents && this.listData(
+									'people',
+									this.peopleLinks,
+									this.peopleNames
+								)}
+							</li>
+						}
 						<li style={this.randomFadeTime()}>
 							films:<br />
 							{this.listData(
@@ -342,12 +320,12 @@ export default class Entry extends React.Component {
 						</li>
 						<li style={this.randomFadeTime()}>
 							language: {me.language}<br />
-							homeworld: {this.homeworldName === 'unknown'
-								? 'unknown'
+							homeworld: {this.planetNames[0] === 'unknown'
+								? <span>unknown</span>
 								: this.renderCrosslink(
 									'planets',
-									this.homeworldLink,
-									this.homeworldName
+									this.planetLinks,
+									this.planetNames
 								)
 							}
 						</li>
